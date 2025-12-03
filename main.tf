@@ -8,7 +8,7 @@ terraform {
     }
   }
   backend "gcs" {
-    bucket = "sanjeev-sre-tf-state"
+    bucket = "sanjeev-sre-bucket"
     prefix = "terraform/state/gke"
   }
 }
