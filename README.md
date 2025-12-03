@@ -1,21 +1,77 @@
-# SRE Platform Infrastructure (sanjeevsethi.in)
+# SRE Platform Infrastructure
 
-## Phase 1: Platform Foundation
+This repository contains Terraform configurations to provision a robust and scalable infrastructure on Google Cloud Platform (GCP) for an SRE portfolio project. It sets up a Google Kubernetes Engine (GKE) Autopilot cluster within a custom Virtual Private Cloud (VPC).
 
-### Progress Log
+## Infrastructure Overview
 
-* [x] **Project:** Created new GCP Project (`sre-portfolio-project`).
-* [x] **Repository:** Initialized `sre-platform-infra` GitHub repository.
-* [x] **Local Tooling:** Installed `terraform` CLI via Homebrew.
-* [x] **Local Tooling:** Installed `gcloud` SDK via Homebrew.
-* [x] **Authentication:** Logged in to GCP using `gcloud auth application-default login`.
-* [x] **Remote Backend:** Manually created GCS bucket (`sanjeev-sre-tf-state`) in `asia-south1 (Mumbai)` for $0.1 remote state storage.
-* [x] **Terraform Core:** Wrote `main.tf`, `provider.tf`, `variables.tf`.
-* [x] **Terraform Init:** Successfully ran `terraform init` to connect to the GCS backend.
-* [x] **Terraform Code (Network):** Wrote `network.tf` to define a custom VPC and GKE subnets in `asia-south1`.
-* [x] **Terraform Code (Cluster):** Wrote `gke.tf` to define the "Always Free" GKE Autopilot cluster.
-* [x] **Terraform Plan:** Run `terraform plan` to validate the infrastructure changes.
-* [x] **Terraform Apply:** Run `terraform apply` to provision the VPC and GKE cluster.
-* [x] **Authentication (kubectl):** Installed `gke-gcloud-auth-plugin`.
-* [x] **Cluster Connection:** Ran `gcloud container clusters get-credentials` to generate a `kubeconfig` file.
-* [x] **Cluster Validation:** Ran `kubectl get nodes`. Received `No resources found`, confirming the serverless Autopilot cluster is ready and waiting for a workload.
+The Terraform code provisions the following resources:
+
+*   **VPC Network**: A custom VPC named `sre-platform-vpc`.
+*   **Subnetwork**: A dedicated subnet `sre-platform-subnet` in the `asia-south1` region with secondary IP ranges for GKE Pods and Services.
+*   **GKE Cluster**: An Autopilot GKE cluster named `sre-platform-cluster`. Autopilot manages the underlying infrastructure, adhering to SRE best practices for reduced operational overhead.
+*   **State Management**: Terraform state is stored securely in a GCS bucket (e.g., `<your-state-bucket>`).
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+*   [Terraform](https://www.terraform.io/downloads.html) (v1.0+)
+*   [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) (`gcloud`)
+
+You also need:
+*   A Google Cloud Platform project.
+*   Appropriate permissions to create VPCs and GKE clusters.
+
+## Getting Started
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd sre-platform-infra
+    ```
+
+2.  **Initialize Terraform:**
+    Initialize the backend and provider plugins.
+    ```bash
+    terraform init
+    ```
+
+3.  **Review the Plan:**
+    See what resources will be created.
+    ```bash
+    terraform plan
+    ```
+
+4.  **Apply Configuration:**
+    Provision the infrastructure.
+    ```bash
+    terraform apply
+    ```
+
+## Configuration
+
+### Variables
+
+| Name | Description | Default |
+|------|-------------|---------|
+| `project_id` | The GCP project ID to deploy resources into. | `<your-project-id>` |
+| `region` | The GCP region to deploy resources into. | `asia-south1` |
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| `cluster_name` | The name of the created GKE cluster. |
+| `cluster_endpoint` | The public IP address of the GKE cluster. |
+
+## Project Structure
+
+```
+.
+├── gke.tf          # GKE Autopilot cluster definition
+├── main.tf         # Terraform backend configuration
+├── network.tf      # VPC and Subnet definitions
+├── provider.tf     # Google provider configuration
+├── variables.tf    # Input variables
+└── README.md       # Project documentation
+```
