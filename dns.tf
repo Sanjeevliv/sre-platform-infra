@@ -19,26 +19,40 @@ output "dns_nameservers" {
   value       = google_dns_managed_zone.portfolio.name_servers
 }
 
-# Example: A record for the main site (update IP when you have it)
-# Uncomment and update when you have the actual IP
-# resource "google_dns_record_set" "main" {
-#   name         = google_dns_managed_zone.portfolio.dns_name
-#   type         = "A"
-#   ttl          = 300
-#   managed_zone = google_dns_managed_zone.portfolio.name
-#   project      = var.project_id
-#   rrdatas      = ["YOUR_IP_HERE"]
-# }
+# GitHub Pages Verification Content
+resource "google_dns_record_set" "gh_verification" {
+  name         = "_github-pages-challenge-Sanjeevliv.${google_dns_managed_zone.portfolio.dns_name}"
+  type         = "TXT"
+  ttl          = 300
+  managed_zone = google_dns_managed_zone.portfolio.name
+  project      = var.project_id
+  rrdatas      = ["6cefc467b80342d098fb19d17febd2"]
+}
 
-# Example: CNAME for www subdomain
-# resource "google_dns_record_set" "www" {
-#   name         = "www.${google_dns_managed_zone.portfolio.dns_name}"
-#   type         = "CNAME"
-#   ttl          = 300
-#   managed_zone = google_dns_managed_zone.portfolio.name
-#   project      = var.project_id
-#   rrdatas      = ["sanjeevsethi.in."]
-# }
+# GitHub Pages A Records (Apex Domain)
+resource "google_dns_record_set" "github_pages_apex" {
+  name         = google_dns_managed_zone.portfolio.dns_name
+  type         = "A"
+  ttl          = 300
+  managed_zone = google_dns_managed_zone.portfolio.name
+  project      = var.project_id
+  rrdatas      = [
+    "185.199.108.153",
+    "185.199.109.153",
+    "185.199.110.153",
+    "185.199.111.153",
+  ]
+}
+
+# GitHub Pages CNAME (www)
+resource "google_dns_record_set" "github_pages_www" {
+  name         = "www.${google_dns_managed_zone.portfolio.dns_name}"
+  type         = "CNAME"
+  ttl          = 300
+  managed_zone = google_dns_managed_zone.portfolio.name
+  project      = var.project_id
+  rrdatas      = ["Sanjeevliv.github.io."]
+}
 
 # Example: A record for monitor subdomain (Grafana)
 # resource "google_dns_record_set" "monitor" {
