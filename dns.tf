@@ -54,12 +54,12 @@ resource "google_dns_record_set" "github_pages_www" {
   rrdatas      = ["Sanjeevliv.github.io."]
 }
 
-# Example: A record for monitor subdomain (Grafana)
-# resource "google_dns_record_set" "monitor" {
-#   name         = "monitor.${google_dns_managed_zone.portfolio.dns_name}"
-#   type         = "A"
-#   ttl          = 300
-#   managed_zone = google_dns_managed_zone.portfolio.name
-#   project      = var.project_id
-#   rrdatas      = ["YOUR_GKE_INGRESS_IP"]
-# }
+# A record for monitor subdomain (Grafana)
+resource "google_dns_record_set" "monitor" {
+  name         = "monitor.${google_dns_managed_zone.portfolio.dns_name}"
+  type         = "A"
+  ttl          = 300
+  managed_zone = google_dns_managed_zone.portfolio.name
+  project      = var.project_id
+  rrdatas      = ["34.47.220.97"]
+}
